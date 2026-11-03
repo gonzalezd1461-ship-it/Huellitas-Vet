@@ -1,0 +1,74 @@
+// Huellitas Vet - Modelo de datos para JHipster
+// Nota: Usuario es un perfil de negocio, NO sustituye la autenticacion integrada de JHipster.
+entity Persona {
+  nombres String required minlength(2) maxlength(100),
+  apellidos String required minlength(2) maxlength(100),
+  dni String required unique pattern(/^[0-9]{8}$/),
+  telefono String required maxlength(20),
+  email String maxlength(150),
+  direccion String maxlength(200)
+}
+entity Propietario {
+  activo Boolean required,
+  fechaRegistro ZonedDateTime required
+}
+entity Veterinario {
+  cmvp String required unique maxlength(30),
+  especialidad String required maxlength(100),
+  telefonoTrabajo String maxlength(20),
+  activo Boolean required,
+  fechaAlta ZonedDateTime required,
+  fechaBaja ZonedDateTime
+}
+entity Usuario {
+  nombreUsuario String required unique minlength(4) maxlength(80),
+  rol RolUsuario required,
+  activo Boolean required
+}
+entity Mascota {
+  nombre String required maxlength(100),
+  especie EspecieMascota required,
+  raza String maxlength(80),
+  fechaNacimiento LocalDate,
+  sexo SexoMascota,
+  observaciones TextBlob
+}
+entity EstadoCita {
+  nombre EstadoCitaNombre required unique,
+  activo Boolean required
+}
+entity Cita {
+  fechaHora ZonedDateTime required,
+  motivo String required maxlength(500),
+  observaciones String maxlength(1000),
+  fechaCreacion ZonedDateTime required
+}
+entity Pago {
+  monto BigDecimal required min(0.01),
+  metodo MetodoPago required,
+  numeroOperacion String maxlength(100),
+  estado EstadoPago required,
+  esAdelanto Boolean required,
+  fechaPago ZonedDateTime required,
+  fechaConfirmacion ZonedDateTime
+}
+enum RolUsuario { ADMINISTRADOR, CLIENTE }
+enum EspecieMascota { PERRO, GATO, OTRO }
+enum SexoMascota { MACHO, HEMBRA, NO_DETERMINADO }
+enum EstadoCitaNombre { PENDIENTE, PROGRAMADO, TERMINADO, ANULADO, POSTERGADO }
+enum EstadoPago { PENDIENTE, CONFIRMADO, RECHAZADO }
+enum MetodoPago { EFECTIVO, TARJETA_DEBITO, TARJETA_CREDITO, TRANSFERENCIA, YAPE, PLIN }
+relationship OneToOne {
+  Propietario{persona required} to Persona,
+  Veterinario{persona required} to Persona
+}
+relationship OneToMany {
+  Persona{usuarios} to Usuario{persona required},
+  Propietario{mascotas} to Mascota{propietario required},
+  Mascota{citas} to Cita{mascota required},
+  Veterinario{citas} to Cita{veterinario required},
+  EstadoCita{citas} to Cita{estadoCita required},
+  Cita{pagos} to Pago{cita required}
+}
+paginate Persona, Propietario, Veterinario, Usuario, Mascota, EstadoCita, Cita, Pago with pagination
+service Persona, Propietario, Veterinario, Usuario, Mascota, EstadoCita, Cita, Pago with serviceClass

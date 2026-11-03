@@ -1,0 +1,62 @@
+HUELLITASVET - VERSION CORREGIDA
+================================
+
+TECNOLOGIAS: JHipster 9.4.0, Java 21, Spring Boot, Angular 22, H2.
+
+CAMBIOS INCLUIDOS
+- Estado Cita muestra el nombre en los formularios, tablas y detalles.
+- Al iniciar la aplicacion en desarrollo, Liquibase crea los cinco estados de cita.
+- El formulario de Cita selecciona PENDIENTE por defecto.
+- Las listas de Mascota, Veterinario, Propietario y Pago muestran nombres en vez de solo IDs.
+- Las pantallas indican el orden para registrar personas, propietarios, mascotas y citas.
+- El backend carga las relaciones necesarias al consultar datos para mostrar los nombres.
+- La base H2 sigue EN MEMORIA, segun la configuracion que ya tenias.
+
+PASOS PARA USAR EL PROYECTO EN WINDOWS
+1. Haz una copia de seguridad de tu carpeta ejemplo2 original.
+2. Extrae este ZIP en otra carpeta, por ejemplo Documentos\ejemplo2_corregido.
+3. Abre una terminal CMD dentro de la carpeta ejemplo2.
+4. Ejecuta: mvnw.cmd
+   Espera el mensaje: Application 'ejemplo2' is running!
+5. Abre otra terminal CMD en la misma carpeta.
+6. Ejecuta: npm install
+   (Solo la primera vez; requiere conexion a internet.)
+7. Ejecuta: npm start
+8. Abre http://localhost:4200, inicia sesion y registra los datos.
+9. Para que el frontend actualizado se muestre desde el puerto 8080,
+   ejecuta npm run webapp:build:dev y reinicia el backend si hace falta.
+
+ORDEN DE REGISTRO
+1. Entidades > Persona > Crear nuevo (persona del propietario).
+2. Entidades > Propietario > Crear nuevo > selecciona esa persona.
+3. Entidades > Persona > Crear nuevo (persona del veterinario).
+4. Entidades > Veterinario > Crear nuevo > selecciona esa persona.
+5. Entidades > Mascota > Crear nuevo > selecciona el propietario.
+6. Entidades > Cita > Crear nuevo > selecciona mascota y veterinario.
+   Estado Cita debe mostrar PENDIENTE, PROGRAMADO, TERMINADO, ANULADO, POSTERGADO.
+7. Entidades > Pago > Crear nuevo > selecciona la cita.
+
+IMPORTANTE SOBRE LOS IDS
+El numero 1500 es un ID interno generado por JHipster; no es un error.
+Se conservan los IDs internos para las relaciones, pero los selectores
+visibles muestran nombres de mascotas, personas y estados.
+
+IMPORTANTE SOBRE H2
+En application-dev.yml se conserva jdbc:h2:mem:huellitasvet.
+El perfil secret-samples ahora usa usuario sa, coherente con application-dev.yml.
+Consola H2 (desde el backend): http://localhost:8080/h2-console
+URL JDBC: jdbc:h2:mem:huellitasvet;DB_CLOSE_DELAY=-1;MODE=MYSQL
+Usuario: sa | Contraseña: vacía.
+No conectes la consola a target/h2db porque es otra base distinta.
+Al detener/reiniciar completamente el backend se pierden los registros
+manuales, porque el profesor solicito H2 sin persistencia en disco.
+Los cinco estados base se recrean al iniciar.
+
+Este paquete no incluye node_modules, target ni .git para reducir peso.
+No se deben copiar los archivos de target de la version anterior.
+Si el puerto 8080 ya esta ocupado, cierra primero el servidor viejo.
+
+NOTA SOBRE VALIDACION
+Se han revisado estaticamente el codigo TypeScript y los XML.
+No se pudo ejecutar una compilacion completa en este entorno porque
+Maven necesita descargar dependencias. Verifica el arranque en tu PC.
